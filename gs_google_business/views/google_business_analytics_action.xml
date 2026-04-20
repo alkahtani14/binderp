@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         Analytics: Reviews — opens directly on pivot view
+         ============================================================ -->
+    <record id="google_business_review_analytics_action" model="ir.actions.act_window">
+        <field name="name">Review Analytics</field>
+        <field name="res_model">google.business.review</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="google_business_review_view_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No review data yet
+            </p>
+            <p>
+                Synchronise a connected location to import Google reviews
+                and start tracking rating trends and response metrics.
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Analytics: Posts — opens directly on pivot view
+         ============================================================ -->
+    <record id="google_business_post_analytics_action" model="ir.actions.act_window">
+        <field name="name">Post Analytics</field>
+        <field name="res_model">google.business.post</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="google_business_post_view_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No published posts yet
+            </p>
+            <p>
+                Publish posts to your Google Business Profile and track
+                view and click-through engagement metrics here.
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Analytics: Media — opens on graph view showing view counts
+         ============================================================ -->
+    <record id="google_business_media_analytics_action" model="ir.actions.act_window">
+        <field name="name">Media Performance</field>
+        <field name="res_model">google.business.media</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="domain">[('state', '=', 'published')]</field>
+        <field name="search_view_id" ref="google_business_media_view_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No published media yet
+            </p>
+            <p>
+                Upload and publish photos and videos to see their Google view counts here.
+            </p>
+        </field>
+    </record>
+
+</odoo>

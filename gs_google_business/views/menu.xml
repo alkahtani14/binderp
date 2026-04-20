@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         Google Business — Top-level submenu under CRM
+         ============================================================ -->
+    <menuitem
+        id="menu_google_business_root"
+        name="Google Business"
+        parent="crm.crm_menu_root"
+        sequence="90"
+        groups="gs_google_business.group_user"/>
+
+    <!-- Locations -->
+    <menuitem
+        id="menu_google_business_locations"
+        name="Locations"
+        parent="menu_google_business_root"
+        action="google_business_location_action"
+        sequence="10"
+        groups="gs_google_business.group_user"/>
+
+    <!-- Reviews -->
+    <menuitem
+        id="menu_google_business_reviews"
+        name="All Reviews"
+        parent="menu_google_business_root"
+        action="google_business_review_action"
+        sequence="20"
+        groups="gs_google_business.group_user"/>
+
+    <menuitem
+        id="menu_google_business_reviews_unanswered"
+        name="Unanswered Reviews"
+        parent="menu_google_business_root"
+        action="google_business_review_action_unanswered"
+        sequence="30"
+        groups="gs_google_business.group_user"/>
+
+    <!-- Media -->
+    <menuitem
+        id="menu_google_business_media"
+        name="Media Library"
+        parent="menu_google_business_root"
+        action="google_business_media_action"
+        sequence="40"
+        groups="gs_google_business.group_user"/>
+
+    <!-- Posts -->
+    <menuitem
+        id="menu_google_business_posts"
+        name="Posts &amp; Announcements"
+        parent="menu_google_business_root"
+        action="google_business_post_action"
+        sequence="50"
+        groups="gs_google_business.group_user"/>
+
+    <!-- Analytics submenu -->
+    <menuitem
+        id="menu_google_business_analytics"
+        name="Analytics"
+        parent="menu_google_business_root"
+        sequence="60"
+        groups="gs_google_business.group_user"/>
+
+    <menuitem
+        id="menu_google_business_review_analytics"
+        name="Review Analytics"
+        parent="menu_google_business_analytics"
+        action="google_business_review_analytics_action"
+        sequence="10"
+        groups="gs_google_business.group_user"/>
+
+    <menuitem
+        id="menu_google_business_post_analytics"
+        name="Post Engagement"
+        parent="menu_google_business_analytics"
+        action="google_business_post_analytics_action"
+        sequence="20"
+        groups="gs_google_business.group_user"/>
+
+    <menuitem
+        id="menu_google_business_media_analytics"
+        name="Media Performance"
+        parent="menu_google_business_analytics"
+        action="google_business_media_analytics_action"
+        sequence="30"
+        groups="gs_google_business.group_user"/>
+
+    <!-- Reply Templates (Canned Responses) -->
+    <menuitem
+        id="menu_google_business_canned"
+        name="Reply Templates"
+        parent="menu_google_business_root"
+        action="mail.mail_canned_response_action"
+        sequence="70"
+        groups="gs_google_business.group_user"/>
+
+</odoo>

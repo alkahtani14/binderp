@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="google_business_review_action" model="ir.actions.act_window">
+        <field name="name">Reviews</field>
+        <field name="res_model">google.business.review</field>
+        <field name="view_mode">list,kanban,activity,pivot,graph,form</field>
+        <field name="search_view_id" ref="google_business_review_view_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No reviews yet
+            </p>
+            <p>
+                Synchronise a connected location to import Google reviews.
+                Reply directly from Odoo using your canned response library.
+            </p>
+        </field>
+    </record>
+
+    <record id="google_business_review_action_unanswered" model="ir.actions.act_window">
+        <field name="name">Unanswered Reviews</field>
+        <field name="res_model">google.business.review</field>
+        <field name="view_mode">list,kanban,activity,pivot,graph,form</field>
+        <field name="domain">[('is_replied', '=', False)]</field>
+        <field name="search_view_id" ref="google_business_review_view_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                All reviews have been answered!
+            </p>
+        </field>
+    </record>
+</odoo>

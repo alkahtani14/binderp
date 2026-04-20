@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ============================================================
+             Demo Locations
+             ============================================================ -->
+        <record id="demo_location_main" model="google.business.location">
+            <field name="name">Garage Systems — Main Branch</field>
+            <field name="google_location_id">accounts/1234567890/locations/0987654321</field>
+            <field name="google_account_id">1234567890</field>
+            <field name="state">connected</field>
+            <field name="primary_category">Auto Repair Shop</field>
+            <field name="street">15 Industrial Road</field>
+            <field name="city">Riyadh</field>
+            <field name="country_id" ref="base.sa"/>
+            <field name="phone">+966 11 234 5678</field>
+            <field name="website">https://www.garagesystems.io</field>
+            <field name="last_sync_date" eval="(DateTime.now() - timedelta(hours=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="demo_location_north" model="google.business.location">
+            <field name="name">Garage Systems — North Branch</field>
+            <field name="google_location_id">accounts/1234567890/locations/1122334455</field>
+            <field name="google_account_id">1234567890</field>
+            <field name="state">connected</field>
+            <field name="primary_category">Auto Repair Shop</field>
+            <field name="street">88 King Fahd Road</field>
+            <field name="city">Riyadh</field>
+            <field name="country_id" ref="base.sa"/>
+            <field name="phone">+966 11 876 5432</field>
+            <field name="website">https://www.garagesystems.io</field>
+            <field name="last_sync_date" eval="(DateTime.now() - timedelta(hours=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="demo_location_draft" model="google.business.location">
+            <field name="name">Garage Systems — West Branch (Pending Setup)</field>
+            <field name="state">draft</field>
+            <field name="primary_category">Auto Repair Shop</field>
+            <field name="city">Jeddah</field>
+            <field name="country_id" ref="base.sa"/>
+        </record>
+
+        <!-- ============================================================
+             Demo Business Hours — Main Branch (Sun–Thu 08:00–18:00)
+             ============================================================ -->
+        <record id="demo_hours_main_sun" model="google.business.location.hours">
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="day_of_week">SUNDAY</field>
+            <field name="open_time">8.0</field>
+            <field name="close_time">18.0</field>
+        </record>
+        <record id="demo_hours_main_mon" model="google.business.location.hours">
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="day_of_week">MONDAY</field>
+            <field name="open_time">8.0</field>
+            <field name="close_time">18.0</field>
+        </record>
+        <record id="demo_hours_main_tue" model="google.business.location.hours">
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="day_of_week">TUESDAY</field>
+            <field name="open_time">8.0</field>
+            <field name="close_time">18.0</field>
+        </record>
+        <record id="demo_hours_main_wed" model="google.business.location.hours">
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="day_of_week">WEDNESDAY</field>
+            <field name="open_time">8.0</field>
+            <field name="close_time">18.0</field>
+        </record>
+        <record id="demo_hours_main_thu" model="google.business.location.hours">
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="day_of_week">THURSDAY</field>
+            <field name="open_time">8.0</field>
+            <field name="close_time">18.0</field>
+        </record>
+        <record id="demo_hours_main_fri" model="google.business.location.hours">
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="day_of_week">FRIDAY</field>
+            <field name="is_closed">True</field>
+        </record>
+        <record id="demo_hours_main_sat" model="google.business.location.hours">
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="day_of_week">SATURDAY</field>
+            <field name="open_time">9.0</field>
+            <field name="close_time">14.0</field>
+            <field name="note">Short hours</field>
+        </record>
+
+        <!-- ============================================================
+             Demo Reviews — Main Branch
+             ============================================================ -->
+        <record id="demo_review_5star_ahmed" model="google.business.review">
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="google_review_id">ChZDSElCbTJ2aTJINGpWQVBNbENMaV9BEAA</field>
+            <field name="reviewer_name">Ahmed Al-Rashidi</field>
+            <field name="rating_label">FIVE</field>
+            <field name="rating">5</field>
+            <field name="review_text">Excellent service from start to finish! The team diagnosed my car's issue within minutes and had it repaired the same day. Very professional, honest pricing, and they even washed the car before returning it. Highly recommend Garage Systems to anyone looking for reliable auto service in Riyadh.</field>
+            <field name="review_date" eval="(DateTime.now() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">new</field>
+            <field name="is_replied">False</field>
+        </record>
+
+        <record id="demo_review_5star_sarah" model="google.business.review">
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="google_review_id">ChZDSElCbTJ2aTJINGpWQVBNbENMaV9BEAB</field>
+            <field name="reviewer_name">Sarah Johnson</field>
+            <field name="rating_label">FIVE</field>
+            <field name="rating">5</field>
+            <field name="review_text">I have been coming here for three years and the quality never drops. Mohammed and his team always go above and beyond. Today they fit me in without an appointment and still had my car ready within 2 hours. Outstanding!</field>
+            <field name="review_date" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">replied</field>
+            <field name="is_replied">True</field>
+        </record>
+
+        <record id="demo_reply_sarah" model="google.business.review.reply">
+            <field name="review_id" ref="demo_review_5star_sarah"/>
+            <field name="reply_text">Thank you so much for your continued loyalty, Sarah! Three years of trust means everything to us. We will pass your kind words on to Mohammed and the team — they will be delighted to hear this. See you on your next service!</field>
+            <field name="is_published">True</field>
+            <field name="author_id" ref="base.user_admin"/>
+            <field name="reply_date" eval="(DateTime.now() - timedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="demo_review_4star_khalid" model="google.business.review">
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="google_review_id">ChZDSElCbTJ2aTJINGpWQVBNbENMaV9BEAC</field>
+            <field name="reviewer_name">Khalid Al-Otaibi</field>
+            <field name="rating_label">FOUR</field>
+            <field name="rating">4</field>
+            <field name="review_text">Good service overall. The technician was knowledgeable and fixed my AC problem efficiently. The only reason for 4 stars is the waiting area could use some improvement. Will definitely return.</field>
+            <field name="review_date" eval="(DateTime.now() - timedelta(days=8)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">read</field>
+            <field name="is_replied">False</field>
+        </record>
+
+        <record id="demo_review_2star_negative" model="google.business.review">
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="google_review_id">ChZDSElCbTJ2aTJINGpWQVBNbENMaV9BEAD</field>
+            <field name="reviewer_name">Omar Hassan</field>
+            <field name="rating_label">TWO</field>
+            <field name="rating">2</field>
+            <field name="review_text">Waited over 3 hours for what was supposed to be a 45-minute job. No updates were provided and I had to keep asking for the status. The work quality was fine but the communication and time management need serious improvement.</field>
+            <field name="review_date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">new</field>
+            <field name="is_replied">False</field>
+        </record>
+
+        <record id="demo_review_rating_only" model="google.business.review">
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="google_review_id">ChZDSElCbTJ2aTJINGpWQVBNbENMaV9BEAE</field>
+            <field name="reviewer_name">Fatima Al-Ghamdi</field>
+            <field name="rating_label">FIVE</field>
+            <field name="rating">5</field>
+            <field name="review_date" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">new</field>
+            <field name="is_replied">False</field>
+        </record>
+
+        <!-- ============================================================
+             Demo Reviews — North Branch
+             ============================================================ -->
+        <record id="demo_review_north_5star" model="google.business.review">
+            <field name="location_id" ref="demo_location_north"/>
+            <field name="google_review_id">ChZDSElCbTJ2aTJINGpWQVBNbENMaV9BEAF</field>
+            <field name="reviewer_name">Nora Al-Zahrani</field>
+            <field name="rating_label">FIVE</field>
+            <field name="rating">5</field>
+            <field name="review_text">The north branch team is fantastic. Clean workshop, honest quotes, and the car was ready exactly when they said it would be. Best auto service experience I have had in Riyadh.</field>
+            <field name="review_date" eval="(DateTime.now() - timedelta(days=10)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">replied</field>
+            <field name="is_replied">True</field>
+        </record>
+
+        <record id="demo_reply_nora" model="google.business.review.reply">
+            <field name="review_id" ref="demo_review_north_5star"/>
+            <field name="reply_text">Thank you for your wonderful review, Nora! Our North Branch team takes great pride in delivering a clean, transparent, and punctual service. We truly appreciate your feedback and look forward to seeing you again!</field>
+            <field name="is_published">True</field>
+            <field name="author_id" ref="base.user_admin"/>
+            <field name="reply_date" eval="(DateTime.now() - timedelta(days=9)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <!-- ============================================================
+             Demo Media Items
+             ============================================================ -->
+        <record id="demo_media_exterior" model="google.business.media">
+            <field name="name">Main Branch Exterior — Front View</field>
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="media_format">PHOTO</field>
+            <field name="category">EXTERIOR</field>
+            <field name="state">published</field>
+            <field name="description">Street-level photo of the main entrance and signage</field>
+            <field name="source_url">https://placehold.co/800x600/2563eb/ffffff?text=Garage+Exterior</field>
+            <field name="view_count">347</field>
+            <field name="upload_date" eval="(DateTime.now() - timedelta(days=30)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="demo_media_interior" model="google.business.media">
+            <field name="name">Workshop Interior — Service Bays</field>
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="media_format">PHOTO</field>
+            <field name="category">INTERIOR</field>
+            <field name="state">published</field>
+            <field name="description">Clean and modern service bays with state-of-the-art diagnostic equipment</field>
+            <field name="source_url">https://placehold.co/800x600/1e40af/ffffff?text=Workshop+Interior</field>
+            <field name="view_count">214</field>
+            <field name="upload_date" eval="(DateTime.now() - timedelta(days=28)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="demo_media_team" model="google.business.media">
+            <field name="name">Our Expert Team</field>
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="media_format">PHOTO</field>
+            <field name="category">TEAMS</field>
+            <field name="state">draft</field>
+            <field name="description">Team photo showing our certified technicians</field>
+            <field name="source_url">https://placehold.co/800x600/1d4ed8/ffffff?text=Team+Photo</field>
+        </record>
+
+        <!-- ============================================================
+             Demo Posts
+             ============================================================ -->
+        <record id="demo_post_ramadan" model="google.business.post">
+            <field name="title">Ramadan Special — Free Vehicle Health Check</field>
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="post_type">OFFER</field>
+            <field name="state">published</field>
+            <field name="summary">This Ramadan, we are offering a FREE comprehensive vehicle health check for all customers. Visit us between now and the end of the holy month and our certified technicians will inspect your vehicle at no charge. Book your slot today!</field>
+            <field name="cta_type">BOOK</field>
+            <field name="cta_url">https://www.garagesystems.io/book</field>
+            <field name="offer_coupon_code">RAMADAN2026</field>
+            <field name="offer_terms">Valid for one vehicle per customer. Offer valid during Ramadan 2026 only. Excludes parts and labour for any identified repairs.</field>
+            <field name="publish_date" eval="(DateTime.now() - timedelta(days=15)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="view_count">1842</field>
+            <field name="click_count">287</field>
+            <field name="google_post_id">accounts/1234567890/locations/0987654321/localPosts/ram2026</field>
+        </record>
+
+        <record id="demo_post_news" model="google.business.post">
+            <field name="title">New Diagnostic Equipment — Faster, More Accurate Service</field>
+            <field name="location_id" ref="demo_location_main"/>
+            <field name="post_type">STANDARD</field>
+            <field name="state">published</field>
+            <field name="summary">We have just invested in the latest OBD-III diagnostic equipment, enabling our technicians to identify issues faster and more accurately than ever before. This means less time in the workshop and more accurate repair quotes for you. Visit us to experience the difference!</field>
+            <field name="cta_type">LEARN_MORE</field>
+            <field name="cta_url">https://www.garagesystems.io/diagnostic</field>
+            <field name="publish_date" eval="(DateTime.now() - timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="view_count">623</field>
+            <field name="click_count">89</field>
+            <field name="google_post_id">accounts/1234567890/locations/0987654321/localPosts/diag2026</field>
+        </record>
+
+        <record id="demo_post_draft" model="google.business.post">
+            <field name="title">Summer Tire Check — Stay Safe This Season</field>
+            <field name="location_id" ref="demo_location_north"/>
+            <field name="post_type">STANDARD</field>
+            <field name="state">draft</field>
+            <field name="summary">As temperatures rise this summer, your tires need extra attention. Schedule a free tire pressure and tread depth check at our North Branch. Our team will ensure you are road-safe for the season. Walk-ins welcome!</field>
+            <field name="cta_type">CALL</field>
+        </record>
+
+    </data>
+</odoo>

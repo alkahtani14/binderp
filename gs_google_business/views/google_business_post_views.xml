@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         Post — Form View
+         ============================================================ -->
+    <record id="google_business_post_view_form" model="ir.ui.view">
+        <field name="name">google.business.post.view.form</field>
+        <field name="model">google.business.post</field>
+        <field name="arch" type="xml">
+            <form string="Google Business Post">
+                <header>
+                    <button name="action_publish"
+                            string="Publish Now"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state not in ('draft', 'scheduled')"/>
+                    <button name="action_schedule"
+                            string="Schedule"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_unpublish"
+                            string="Remove from Google"
+                            type="object"
+                            class="btn-secondary"
+                            confirm="This will delete the post from Google permanently. Continue?"
+                            invisible="state != 'published'"/>
+                    <button name="action_sync_metrics"
+                            string="Refresh Metrics"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state != 'published'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,scheduled,published,expired"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <div class="oe_stat_button o_stat_button" invisible="state != 'published'">
+                            <div class="o_stat_info">
+                                <field name="view_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Views</span>
+                            </div>
+                        </div>
+                        <div class="oe_stat_button o_stat_button"
+                             invisible="state != 'published' or not cta_type">
+                            <div class="o_stat_info">
+                                <field name="click_count" class="o_stat_value"/>
+                                <span class="o_stat_text">CTA Clicks</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oe_title">
+                        <label for="title"/>
+                        <h1>
+                            <field name="title" placeholder="Post Title"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Post Settings">
+                            <field name="location_id"/>
+                            <field name="post_type"/>
+                            <field name="publish_date"/>
+                            <field name="expiry_date"/>
+                        </group>
+                        <group string="Google Info" invisible="state == 'draft'">
+                            <field name="google_post_id" readonly="True"/>
+                            <field name="view_count" readonly="True"/>
+                            <field name="click_count" readonly="True"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Content" name="content">
+                            <field name="summary" widget="text"
+                                   placeholder="Write your post content here (max ~1,500 characters)…"/>
+                            <group string="Media">
+                                <field name="media_url" widget="url"/>
+                            </group>
+                            <group string="Call to Action">
+                                <field name="cta_type"/>
+                                <field name="cta_url" widget="url"
+                                       invisible="not cta_type or cta_type == 'CALL'"/>
+                            </group>
+                        </page>
+                        <page string="Event Details" name="event"
+                              invisible="post_type != 'EVENT'">
+                            <group>
+                                <field name="event_title"/>
+                                <field name="event_start"/>
+                                <field name="event_end"/>
+                            </group>
+                        </page>
+                        <page string="Offer Details" name="offer"
+                              invisible="post_type != 'OFFER'">
+                            <group>
+                                <field name="offer_coupon_code"/>
+                                <field name="offer_redeem_url" widget="url"/>
+                                <field name="offer_terms" widget="text"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Post — Kanban View
+         ============================================================ -->
+    <record id="google_business_post_view_kanban" model="ir.ui.view">
+        <field name="name">google.business.post.view.kanban</field>
+        <field name="model">google.business.post</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="title"/>
+                <field name="state"/>
+                <field name="post_type"/>
+                <field name="summary"/>
+                <field name="location_id"/>
+                <field name="publish_date"/>
+                <field name="view_count"/>
+                <field name="click_count"/>
+                <progressbar field="state"
+                             colors='{"published": "success", "expired": "200", "rejected": "danger", "draft": "200", "scheduled": "warning"}'/>
+                <templates>
+                    <t t-name="card">
+                        <div class="o_kanban_record_top">
+                            <div class="o_kanban_record_headings">
+                                <strong class="o_kanban_record_title">
+                                    <field name="title"/>
+                                </strong>
+                                <span class="o_kanban_record_subtitle text-muted">
+                                    <field name="post_type"/> · <field name="location_id"/>
+                                </span>
+                            </div>
+                            <field name="state" widget="label_selection"
+                                   options="{'classes': {'published': 'badge-success', 'scheduled': 'badge-warning', 'draft': 'badge-secondary', 'expired': 'badge-light', 'rejected': 'badge-danger'}}"/>
+                        </div>
+                        <div class="o_kanban_record_body">
+                            <p class="text-truncate" style="max-height:60px;overflow:hidden;">
+                                <field name="summary"/>
+                            </p>
+                        </div>
+                        <div class="o_kanban_record_bottom">
+                            <span class="text-muted small">
+                                <i class="fa fa-eye"/> <field name="view_count"/>
+                                <i class="fa fa-mouse-pointer ms-2"/> <field name="click_count"/>
+                            </span>
+                            <span class="text-muted small ms-auto">
+                                <field name="publish_date" widget="date"/>
+                            </span>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Post — List View
+         ============================================================ -->
+    <record id="google_business_post_view_list" model="ir.ui.view">
+        <field name="name">google.business.post.view.list</field>
+        <field name="model">google.business.post</field>
+        <field name="arch" type="xml">
+            <list string="Google Business Posts"
+                  decoration-success="state == 'published'"
+                  decoration-muted="state in ('expired', 'draft')"
+                  decoration-danger="state == 'rejected'"
+                  decoration-warning="state == 'scheduled'">
+                <field name="title"/>
+                <field name="location_id"/>
+                <field name="post_type"/>
+                <field name="publish_date"/>
+                <field name="expiry_date" optional="show"/>
+                <field name="view_count" sum="Total Views"/>
+                <field name="click_count" sum="Total Clicks" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'published'"
+                       decoration-warning="state == 'scheduled'"
+                       decoration-danger="state == 'rejected'"
+                       decoration-muted="state in ('draft', 'expired')"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Post — Calendar View
+         ============================================================ -->
+    <record id="google_business_post_view_calendar" model="ir.ui.view">
+        <field name="name">google.business.post.view.calendar</field>
+        <field name="model">google.business.post</field>
+        <field name="arch" type="xml">
+            <calendar string="Post Schedule"
+                      date_start="publish_date"
+                      date_stop="expiry_date"
+                      color="location_id"
+                      mode="month"
+                      event_limit="5"
+                      quick_create="0">
+                <field name="title"/>
+                <field name="location_id" filters="1" color="1"/>
+                <field name="post_type"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Post — Activity View
+         ============================================================ -->
+    <record id="google_business_post_view_activity" model="ir.ui.view">
+        <field name="name">google.business.post.view.activity</field>
+        <field name="model">google.business.post</field>
+        <field name="arch" type="xml">
+            <activity string="Google Business Posts">
+                <field name="title"/>
+                <field name="location_id"/>
+                <field name="post_type"/>
+                <field name="publish_date"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <div>
+                            <field name="title" display="full" class="o_text_block"/>
+                            <field name="location_id" display="full" class="o_text_block text-muted"/>
+                        </div>
+                        <div>
+                            <field name="post_type"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Post — Pivot View
+         ============================================================ -->
+    <record id="google_business_post_view_pivot" model="ir.ui.view">
+        <field name="name">google.business.post.view.pivot</field>
+        <field name="model">google.business.post</field>
+        <field name="arch" type="xml">
+            <pivot string="Post Analytics" disable_linking="false">
+                <field name="location_id" type="row"/>
+                <field name="post_type" type="col"/>
+                <field name="view_count" type="measure"/>
+                <field name="click_count" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Post — Graph View
+         ============================================================ -->
+    <record id="google_business_post_view_graph" model="ir.ui.view">
+        <field name="name">google.business.post.view.graph</field>
+        <field name="model">google.business.post</field>
+        <field name="arch" type="xml">
+            <graph string="Post Analytics" type="bar">
+                <field name="location_id" type="row"/>
+                <field name="view_count" type="measure"/>
+                <field name="click_count" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Post — Search View
+         ============================================================ -->
+    <record id="google_business_post_view_search" model="ir.ui.view">
+        <field name="name">google.business.post.view.search</field>
+        <field name="model">google.business.post</field>
+        <field name="arch" type="xml">
+            <search string="Search Posts">
+                <field name="title"/>
+                <field name="summary"/>
+                <field name="location_id"/>
+                <separator/>
+                <filter name="filter_published" string="Published"
+                        domain="[('state', '=', 'published')]"/>
+                <filter name="filter_scheduled" string="Scheduled"
+                        domain="[('state', '=', 'scheduled')]"/>
+                <filter name="filter_draft" string="Draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_expired" string="Expired"
+                        domain="[('state', '=', 'expired')]"/>
+                <separator/>
+                <filter name="filter_standard" string="What's New"
+                        domain="[('post_type', '=', 'STANDARD')]"/>
+                <filter name="filter_event" string="Events"
+                        domain="[('post_type', '=', 'EVENT')]"/>
+                <filter name="filter_offer" string="Offers"
+                        domain="[('post_type', '=', 'OFFER')]"/>
+                <filter name="filter_archived" string="Archived"
+                        domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_location" string="Location"
+                            context="{'group_by': 'location_id'}"/>
+                    <filter name="group_post_type" string="Post Type"
+                            context="{'group_by': 'post_type'}"/>
+                    <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_month" string="Publish Month"
+                            context="{'group_by': 'publish_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>

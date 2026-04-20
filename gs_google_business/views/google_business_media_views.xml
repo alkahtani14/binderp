@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         Media — Form View
+         ============================================================ -->
+    <record id="google_business_media_view_form" model="ir.ui.view">
+        <field name="name">google.business.media.view.form</field>
+        <field name="model">google.business.media</field>
+        <field name="arch" type="xml">
+            <form string="Google Business Media">
+                <header>
+                    <button name="action_upload_to_google"
+                            string="Upload to Google"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_remove_from_google"
+                            string="Remove from Google"
+                            type="object"
+                            class="btn-secondary"
+                            confirm="This will permanently remove the media from Google. Continue?"
+                            invisible="state != 'published'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,published,removed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="File Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Classification">
+                            <field name="location_id"/>
+                            <field name="media_format"/>
+                            <field name="category"/>
+                            <field name="media_date"/>
+                        </group>
+                        <group string="Google Info">
+                            <field name="google_media_id" readonly="True"/>
+                            <field name="google_url" widget="url" readonly="True"/>
+                            <field name="view_count" readonly="True"/>
+                            <field name="upload_date" readonly="True"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="File" name="file">
+                            <group>
+                                <field name="description"/>
+                                <field name="source_url" widget="url"
+                                       invisible="media_file != False"/>
+                                <field name="media_file" widget="binary"
+                                       filename="media_filename"/>
+                                <field name="media_filename" invisible="True"/>
+                            </group>
+                            <group invisible="thumbnail_url == False">
+                                <field name="thumbnail_url" widget="url" string="Google Thumbnail"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Media — Kanban View (primary view for browsing media)
+         ============================================================ -->
+    <record id="google_business_media_view_kanban" model="ir.ui.view">
+        <field name="name">google.business.media.view.kanban</field>
+        <field name="model">google.business.media</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="state"/>
+                <field name="category"/>
+                <field name="media_format"/>
+                <field name="thumbnail_url"/>
+                <field name="google_url"/>
+                <field name="view_count"/>
+                <field name="location_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="o_kanban_record_top">
+                            <div class="o_kanban_record_headings">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <span class="o_kanban_record_subtitle text-muted">
+                                    <field name="category"/>
+                                </span>
+                            </div>
+                            <field name="state" widget="label_selection"
+                                   options="{'classes': {'published': 'badge-success', 'draft': 'badge-secondary', 'error': 'badge-danger', 'uploading': 'badge-warning', 'removed': 'badge-light'}}"/>
+                        </div>
+                        <div class="o_kanban_record_body text-center" style="min-height:120px;">
+                            <t t-if="record.thumbnail_url.value">
+                                <img t-att-src="record.thumbnail_url.value"
+                                     class="img-fluid rounded"
+                                     style="max-height:120px;"
+                                     alt="Media thumbnail"/>
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-film fa-3x text-muted mt-3"
+                                   t-if="record.media_format.raw_value == 'VIDEO'"/>
+                                <i class="fa fa-image fa-3x text-muted mt-3"
+                                   t-if="record.media_format.raw_value == 'PHOTO'"/>
+                            </t>
+                        </div>
+                        <div class="o_kanban_record_bottom">
+                            <span class="text-muted small">
+                                <i class="fa fa-eye"/> <field name="view_count"/> views
+                            </span>
+                            <span class="ms-3 text-muted small">
+                                <field name="location_id"/>
+                            </span>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Media — List View
+         ============================================================ -->
+    <record id="google_business_media_view_list" model="ir.ui.view">
+        <field name="name">google.business.media.view.list</field>
+        <field name="model">google.business.media</field>
+        <field name="arch" type="xml">
+            <list string="Google Business Media"
+                  decoration-success="state == 'published'"
+                  decoration-danger="state == 'error'"
+                  decoration-muted="state == 'removed'">
+                <field name="name"/>
+                <field name="location_id"/>
+                <field name="media_format"/>
+                <field name="category"/>
+                <field name="media_date"/>
+                <field name="upload_date"/>
+                <field name="view_count" sum="Total Views"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'published'"
+                       decoration-warning="state == 'uploading'"
+                       decoration-danger="state == 'error'"
+                       decoration-muted="state in ('draft', 'removed')"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Media — Pivot View
+         ============================================================ -->
+    <record id="google_business_media_view_pivot" model="ir.ui.view">
+        <field name="name">google.business.media.view.pivot</field>
+        <field name="model">google.business.media</field>
+        <field name="arch" type="xml">
+            <pivot string="Media Performance" disable_linking="false">
+                <field name="location_id" type="row"/>
+                <field name="category" type="col"/>
+                <field name="view_count" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Media — Graph View
+         ============================================================ -->
+    <record id="google_business_media_view_graph" model="ir.ui.view">
+        <field name="name">google.business.media.view.graph</field>
+        <field name="model">google.business.media</field>
+        <field name="arch" type="xml">
+            <graph string="Media Performance" type="bar">
+                <field name="location_id" type="row"/>
+                <field name="view_count" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Media — Search View
+         ============================================================ -->
+    <record id="google_business_media_view_search" model="ir.ui.view">
+        <field name="name">google.business.media.view.search</field>
+        <field name="model">google.business.media</field>
+        <field name="arch" type="xml">
+            <search string="Search Media">
+                <field name="name"/>
+                <field name="location_id"/>
+                <field name="description"/>
+                <separator/>
+                <filter name="filter_published" string="Published"
+                        domain="[('state', '=', 'published')]"/>
+                <filter name="filter_draft" string="Draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_photos" string="Photos"
+                        domain="[('media_format', '=', 'PHOTO')]"/>
+                <filter name="filter_videos" string="Videos"
+                        domain="[('media_format', '=', 'VIDEO')]"/>
+                <filter name="filter_archived" string="Archived"
+                        domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_location" string="Location"
+                            context="{'group_by': 'location_id'}"/>
+                    <filter name="group_category" string="Category"
+                            context="{'group_by': 'category'}"/>
+                    <filter name="group_format" string="Format"
+                            context="{'group_by': 'media_format'}"/>
+                    <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>

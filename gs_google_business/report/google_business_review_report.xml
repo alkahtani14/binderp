@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================
+         Review Report — QWeb template
+         Bound to google.business.location so one report = one location's
+         reviews, with dynamic naming: "Reviews — {Location Name}".
+         ================================================================ -->
+    <template id="report_google_business_review_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+
+                    <t t-set="is_rtl" t-value="doc.env.lang == 'ar_SA'"/>
+
+                    <div class="page" t-att-dir="'rtl' if is_rtl else 'ltr'">
+
+                        <!-- ── Report Header ─────────────────────── -->
+                        <div class="row mb-3">
+                            <div class="col-8">
+                                <h2>Review Report</h2>
+                                <h4 class="text-muted"><t t-esc="doc.name"/></h4>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div>
+                                    <strong>Avg. Rating: </strong>
+                                    <span class="h4"><t t-esc="'%.1f' % doc.average_rating"/> ★</span>
+                                </div>
+                                <div class="text-muted small">
+                                    <t t-esc="doc.review_count"/> total reviews •
+                                    <t t-esc="doc.unanswered_review_count"/> unanswered
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ── Rating Distribution ──────────────── -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5>Rating Distribution</h5>
+                                <table class="table table-sm table-borderless" style="max-width:400px;">
+                                    <t t-foreach="[('FIVE', '5 ★★★★★'), ('FOUR', '4 ★★★★'), ('THREE', '3 ★★★'), ('TWO', '2 ★★'), ('ONE', '1 ★')]" t-as="star_row">
+                                        <t t-set="star_count" t-value="len(doc.review_ids.filtered(lambda r: r.rating_label == star_row[0]))"/>
+                                        <tr>
+                                            <td style="width:100px;"><t t-esc="star_row[1]"/></td>
+                                            <td style="width:200px;">
+                                                <div class="progress" style="height:14px;">
+                                                    <div class="progress-bar bg-warning"
+                                                         t-att-style="'width:' + str(int(star_count * 100 / doc.review_count) if doc.review_count else 0) + '%'"/>
+                                                </div>
+                                            </td>
+                                            <td class="text-muted small"><t t-esc="star_count"/></td>
+                                        </tr>
+                                    </t>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- ── Full Review List ──────────────────── -->
+                        <h5>All Reviews</h5>
+                        <t t-foreach="doc.review_ids.sorted('review_date', reverse=True)" t-as="rev">
+                            <div class="mb-4" style="border-top: 1px solid #dee2e6; padding-top: 12px;">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <strong><t t-esc="rev.reviewer_name or 'Anonymous'"/></strong>
+                                        <span class="ms-2">
+                                            <t t-foreach="range(rev.rating)" t-as="s">★</t>
+                                            <t t-foreach="range(5 - rev.rating)" t-as="s">☆</t>
+                                        </span>
+                                    </div>
+                                    <div class="text-muted small">
+                                        <t t-esc="rev.review_date and rev.review_date.strftime('%d %b %Y') or ''"/>
+                                        <span t-att-class="'ms-2 badge ' + ('bg-success' if rev.is_replied else 'bg-secondary')">
+                                            <t t-if="rev.is_replied">Replied</t>
+                                            <t t-else="">Unanswered</t>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Review text -->
+                                <p t-if="rev.review_text" class="mt-1 mb-1 text-muted fst-italic">
+                                    "<t t-esc="rev.review_text"/>"
+                                </p>
+                                <p t-else="" class="mt-1 mb-1 text-muted fst-italic small">
+                                    (Rating only — no text provided)
+                                </p>
+
+                                <!-- Published reply -->
+                                <t t-if="rev.is_replied and rev.latest_reply_text">
+                                    <div class="ms-4 mt-1 p-2" style="background:#f8f9fa; border-left: 3px solid #1a73e8; border-radius: 0 4px 4px 0;">
+                                        <div class="small text-muted mb-1">
+                                            <strong>Owner Reply</strong>
+                                            <t t-if="rev.latest_reply_date">
+                                                · <t t-esc="rev.latest_reply_date.strftime('%d %b %Y')"/>
+                                            </t>
+                                        </div>
+                                        <p class="mb-0 small"><t t-esc="rev.latest_reply_text"/></p>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+
+                        <p t-if="not doc.review_ids" class="text-muted text-center py-4">
+                            No reviews have been imported for this location yet.
+                        </p>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

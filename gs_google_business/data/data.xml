@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- ================================================================
+         Cron: Synchronise all connected Google Business locations
+         ================================================================ -->
+    <record id="ir_cron_sync_google_business_locations" model="ir.cron">
+        <field name="name">Google Business: Sync All Locations</field>
+        <field name="model_id" ref="model_google_business_location"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_sync_all_locations()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="active">True</field>
+    </record>
+
+    <!-- ================================================================
+         Cron: Publish scheduled posts and expire outdated ones
+         ================================================================ -->
+    <record id="ir_cron_publish_scheduled_posts" model="ir.cron">
+        <field name="name">Google Business: Publish Scheduled Posts</field>
+        <field name="model_id" ref="model_google_business_post"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_publish_scheduled_posts()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">30</field>
+        <field name="interval_type">minutes</field>
+        <field name="active">True</field>
+    </record>
+
+    <!-- ================================================================
+         Canned Responses — Google Business Profile scenarios
+         All shortcuts prefixed with "gb." for easy discovery.
+         ================================================================ -->
+
+    <!-- ── 5-Star Reviews ─────────────────────────────────────── -->
+
+    <record id="canned_gb_5star_thank_you" model="mail.canned.response">
+        <field name="source">gb.thanks5</field>
+        <field name="description">Google Review: 5-star generic thank-you</field>
+        <field name="substitution">Thank you so much for your wonderful 5-star review! We are thrilled to hear you had a great experience with us. Your kind words mean the world to our team, and we look forward to serving you again soon.</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="canned_gb_5star_personal" model="mail.canned.response">
+        <field name="source">gb.thanks5p</field>
+        <field name="description">Google Review: 5-star personalised (use customer name)</field>
+        <field name="substitution">Thank you for taking the time to share your experience! We are so pleased to know you enjoyed your visit. It is customers like you who inspire us to keep delivering excellent service every day. We hope to see you again soon!</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="canned_gb_5star_recommend" model="mail.canned.response">
+        <field name="source">gb.thanks5r</field>
+        <field name="description">Google Review: 5-star recommender reply</field>
+        <field name="substitution">We truly appreciate you recommending us to your friends and family! Word-of-mouth is the greatest compliment we can receive. Thank you for your loyalty and support — we cannot wait to welcome you back!</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- ── 4-Star Reviews ─────────────────────────────────────── -->
+
+    <record id="canned_gb_4star_thank_you" model="mail.canned.response">
+        <field name="source">gb.thanks4</field>
+        <field name="description">Google Review: 4-star thank-you with improvement invitation</field>
+        <field name="substitution">Thank you for your positive feedback and for taking the time to write a review! We are glad you had a good experience. We always strive for a 5-star service — if there is anything we could have done to make your visit even better, please let us know. We hope to exceed your expectations next time!</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- ── 3-Star / Neutral Reviews ──────────────────────────── -->
+
+    <record id="canned_gb_3star_feedback" model="mail.canned.response">
+        <field name="source">gb.neutral</field>
+        <field name="description">Google Review: 3-star neutral — request more feedback</field>
+        <field name="substitution">Thank you for sharing your honest feedback! We are sorry to hear your experience did not fully meet your expectations. We take all feedback seriously and would love the opportunity to make things right. Please reach out to us directly so we can understand more about your visit and improve. We hope to see you again and do better!</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- ── Negative Reviews (1–2 stars) ──────────────────────── -->
+
+    <record id="canned_gb_negative_apology" model="mail.canned.response">
+        <field name="source">gb.sorry</field>
+        <field name="description">Google Review: Negative — sincere apology and follow-up offer</field>
+        <field name="substitution">We sincerely apologise that your experience did not meet the standards we hold ourselves to. This is not the level of service we strive to deliver, and we are truly sorry for the inconvenience. Please contact us directly so we can make this right for you. Your satisfaction is our top priority.</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="canned_gb_negative_investigate" model="mail.canned.response">
+        <field name="source">gb.issue</field>
+        <field name="description">Google Review: Negative — investigate and resolve</field>
+        <field name="substitution">Thank you for bringing this to our attention. We are very sorry to hear about your experience. We take concerns like yours seriously and would like to investigate further. Please contact our team directly with your details so we can resolve this as quickly as possible. We appreciate your patience and the opportunity to make it right.</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="canned_gb_negative_wait_time" model="mail.canned.response">
+        <field name="source">gb.wait</field>
+        <field name="description">Google Review: Negative — wait time / delay apology</field>
+        <field name="substitution">We apologise for the wait time you experienced during your visit. We understand your time is valuable and we are actively working on improving our processes to serve customers faster. Thank you for your patience and we hope you will give us another chance to provide the speedy service you deserve.</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- ── Service Recovery ───────────────────────────────────── -->
+
+    <record id="canned_gb_recovery_refund" model="mail.canned.response">
+        <field name="source">gb.refund</field>
+        <field name="description">Google Review: Service recovery — refund/compensation offer</field>
+        <field name="substitution">We are deeply sorry for the experience you had. This is not the standard of service we strive for. Please reach out to our team at your earliest convenience and we will be happy to discuss a resolution, including a refund or complimentary service where appropriate. Thank you for letting us know — your feedback helps us improve.</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="canned_gb_recovery_call" model="mail.canned.response">
+        <field name="source">gb.callback</field>
+        <field name="description">Google Review: Service recovery — request a call back</field>
+        <field name="substitution">We are sorry to read about your experience and we want to personally address your concerns. Please call us directly at your convenience and ask to speak with the manager. We are committed to resolving this and ensuring you leave as a satisfied customer. Thank you for your feedback.</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- ── Industry Specific: Auto / Garage ───────────────────── -->
+
+    <record id="canned_gb_auto_service" model="mail.canned.response">
+        <field name="source">gb.auto5</field>
+        <field name="description">Google Review: 5-star auto/garage service reply</field>
+        <field name="substitution">Thank you for trusting us with your vehicle! We are so glad our team was able to get you back on the road quickly and safely. Your satisfaction and your vehicle's performance are our greatest priorities. We look forward to being your go-to automotive service partner!</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="canned_gb_auto_negative" model="mail.canned.response">
+        <field name="source">gb.autosrry</field>
+        <field name="description">Google Review: Negative auto/garage service recovery</field>
+        <field name="substitution">We are sorry to hear your visit did not meet your expectations. Vehicle care is something we take very seriously, and we regret that we fell short on this occasion. Please contact our service manager directly so we can review your case and find a solution. We stand behind our work and want to make this right for you.</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- ── Industry Specific: Food & Beverage ────────────────── -->
+
+    <record id="canned_gb_food_5star" model="mail.canned.response">
+        <field name="source">gb.food5</field>
+        <field name="description">Google Review: 5-star food and beverage reply</field>
+        <field name="substitution">Thank you for your wonderful review! We are delighted you enjoyed your dining experience with us. Our team works hard every day to bring fresh, quality ingredients and warm hospitality to every table. We look forward to welcoming you back for another great meal!</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="canned_gb_food_negative" model="mail.canned.response">
+        <field name="source">gb.foodsrry</field>
+        <field name="description">Google Review: Negative food quality or service reply</field>
+        <field name="substitution">We are very sorry to hear that your dining experience did not meet your expectations. Food quality and excellent service are our top priorities, and we regret falling short on this visit. Please reach out to us directly so we can discuss what happened and make it up to you. We hope to have the opportunity to welcome you back and impress you.</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- ── Professionalism / Staff Compliment ────────────────── -->
+
+    <record id="canned_gb_staff_compliment" model="mail.canned.response">
+        <field name="source">gb.teamthanks</field>
+        <field name="description">Google Review: Compliment about staff / team</field>
+        <field name="substitution">What wonderful feedback — thank you! We will make sure to pass your kind words on to the team. They work extremely hard to deliver exceptional service and it truly makes their day to know they made yours better. We hope to see you again very soon!</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- ── No Text / Rating Only Reviews ─────────────────────── -->
+
+    <record id="canned_gb_rating_only" model="mail.canned.response">
+        <field name="source">gb.ratingonly</field>
+        <field name="description">Google Review: Rating only (no text) — short thank-you</field>
+        <field name="substitution">Thank you for taking the time to rate us! Your support means a great deal to our team. We hope to provide you with an equally great experience on your next visit!</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- ── Re-engagement ─────────────────────────────────────── -->
+
+    <record id="canned_gb_return_invite" model="mail.canned.response">
+        <field name="source">gb.comeback</field>
+        <field name="description">Google Review: Invite reviewer to return</field>
+        <field name="substitution">Thank you for your review! We are always looking to improve and your feedback helps us do exactly that. We would love for you to visit us again — please look out for our latest promotions and special offers on our Google profile. See you soon!</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="google_business_reply_wizard_view_form" model="ir.ui.view">
+        <field name="name">google.business.reply.wizard.view.form</field>
+        <field name="model">google.business.reply.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reply to Google Review">
+                <sheet>
+                    <!-- Review context panel -->
+                    <div class="o_google_review_context p-3 mb-3 rounded"
+                         style="background: var(--o-view-background-color); border: 1px solid var(--o-border-color);">
+                        <div class="d-flex align-items-center mb-2">
+                            <strong class="me-2">
+                                <field name="reviewer_name" readonly="True"/>
+                            </strong>
+                            <field name="rating_label" widget="priority" readonly="True"/>
+                            <span class="ms-auto text-muted small">
+                                <field name="location_id" readonly="True"/>
+                            </span>
+                        </div>
+                        <p class="text-muted fst-italic mb-0">
+                            <field name="review_text" readonly="True"
+                                   placeholder="(No text — rating only review)"/>
+                        </p>
+                    </div>
+
+                    <!-- Existing reply notice -->
+                    <div class="alert alert-warning" role="alert" invisible="not is_update">
+                        <i class="fa fa-info-circle"/> This review already has a published reply.
+                        Submitting a new reply will <strong>replace</strong> the existing one on Google.
+                        <br/>
+                        <strong>Current reply:</strong>
+                        <field name="existing_reply" readonly="True" widget="text"/>
+                    </div>
+
+                    <group string="Compose Reply">
+                        <field name="canned_response_id"
+                               domain="[]"
+                               placeholder="Select a canned response shortcut or type below…"
+                               options="{'no_create': True}"/>
+                        <field name="reply_text" widget="text"
+                               placeholder="Type your reply here…"
+                               nolabel="True"
+                               style="min-height: 120px;"/>
+                    </group>
+
+                    <div class="alert alert-info" role="alert">
+                        <i class="fa fa-lightbulb-o"/> <strong>Tip:</strong>
+                        Select a canned response above to pre-fill your reply,
+                        then personalise it with the reviewer's name or specific details
+                        before publishing.
+                    </div>
+
+                    <field name="is_update" invisible="True"/>
+                </sheet>
+                <footer>
+                    <button name="action_send_reply"
+                            string="Publish Reply to Google"
+                            type="object"
+                            class="btn-primary"/>
+                    <button name="action_save_draft"
+                            string="Save as Draft"
+                            type="object"
+                            class="btn-secondary"/>
+                    <button string="Cancel"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_google_business_location_user,google.business.location user,model_google_business_location,gs_google_business.group_user,1,1,1,0
+access_google_business_location_manager,google.business.location manager,model_google_business_location,gs_google_business.group_manager,1,1,1,1
+access_google_business_review_user,google.business.review user,model_google_business_review,gs_google_business.group_user,1,1,1,0
+access_google_business_review_manager,google.business.review manager,model_google_business_review,gs_google_business.group_manager,1,1,1,1
+access_google_business_review_reply_user,google.business.review.reply user,model_google_business_review_reply,gs_google_business.group_user,1,1,1,0
+access_google_business_review_reply_manager,google.business.review.reply manager,model_google_business_review_reply,gs_google_business.group_manager,1,1,1,1
+access_google_business_media_user,google.business.media user,model_google_business_media,gs_google_business.group_user,1,1,1,0
+access_google_business_media_manager,google.business.media manager,model_google_business_media,gs_google_business.group_manager,1,1,1,1
+access_google_business_post_user,google.business.post user,model_google_business_post,gs_google_business.group_user,1,1,1,0
+access_google_business_post_manager,google.business.post manager,model_google_business_post,gs_google_business.group_manager,1,1,1,1
+access_google_business_location_hours_user,google.business.location.hours user,model_google_business_location_hours,gs_google_business.group_user,1,1,1,0
+access_google_business_location_hours_manager,google.business.location.hours manager,model_google_business_location_hours,gs_google_business.group_manager,1,1,1,1
+access_google_business_oauth_wizard_user,google.business.oauth.wizard user,model_google_business_oauth_wizard,gs_google_business.group_manager,1,1,1,1
+access_google_business_reply_wizard_user,google.business.reply.wizard user,model_google_business_reply_wizard,gs_google_business.group_user,1,1,1,1

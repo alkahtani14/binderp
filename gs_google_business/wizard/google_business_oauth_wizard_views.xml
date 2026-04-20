@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="google_business_oauth_wizard_view_form" model="ir.ui.view">
+        <field name="name">google.business.oauth.wizard.view.form</field>
+        <field name="model">google.business.oauth.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Connect to Google Business Profile">
+                <sheet>
+                    <!-- Step 1: Credentials -->
+                    <group invisible="step != 'credentials'">
+                        <div class="alert alert-info" role="alert">
+                            <strong>Step 1 of 3 — Enter your Google Cloud credentials.</strong><br/>
+                            Open <a href="https://console.cloud.google.com/apis/credentials"
+                                    target="_blank">Google Cloud Console → Credentials</a>
+                            and copy your OAuth 2.0 Client ID and Secret.
+                        </div>
+                        <group>
+                            <field name="location_id" readonly="True"/>
+                            <field name="oauth_client_id" placeholder="xxxxx.apps.googleusercontent.com"/>
+                            <field name="oauth_client_secret" password="True"/>
+                            <field name="redirect_uri"/>
+                        </group>
+                    </group>
+
+                    <!-- Step 2: Authorize -->
+                    <group invisible="step != 'authorize'">
+                        <div class="alert alert-info" role="alert">
+                            <strong>Step 2 of 3 — Open the authorization URL.</strong><br/>
+                            Click the link below, sign in with your Google account,
+                            grant access, and copy the authorization code shown.
+                        </div>
+                        <group>
+                            <field name="authorization_url" widget="url" string="Authorization URL"/>
+                        </group>
+                        <div class="alert alert-warning" role="alert">
+                            After granting access, paste the authorization code into the
+                            "Authorization Code" field below and click <em>Next</em>.
+                        </div>
+                        <group>
+                            <field name="authorization_code"
+                                   placeholder="4/0AX4XfWg…"/>
+                        </group>
+                    </group>
+
+                    <!-- Step 3: Exchange -->
+                    <group invisible="step != 'exchange'">
+                        <div class="alert alert-info" role="alert">
+                            <strong>Step 3 of 3 — Exchange the authorization code.</strong><br/>
+                            Click <em>Connect</em> to exchange the code for OAuth tokens.
+                            This may take a few seconds.
+                        </div>
+                        <group>
+                            <field name="authorization_code" readonly="True"/>
+                        </group>
+                    </group>
+
+                    <!-- Done -->
+                    <group invisible="step != 'done'">
+                        <div class="alert alert-success" role="alert">
+                            <strong>Connected!</strong>
+                            <field name="result_message"/>
+                        </div>
+                    </group>
+
+                    <field name="step" invisible="True"/>
+                </sheet>
+                <footer>
+                    <!-- Step 1 -->
+                    <button name="action_next_to_authorize"
+                            string="Next →"
+                            type="object"
+                            class="btn-primary"
+                            invisible="step != 'credentials'"/>
+                    <!-- Step 2 -->
+                    <button name="action_next_to_exchange"
+                            string="Next →"
+                            type="object"
+                            class="btn-primary"
+                            invisible="step != 'authorize'"/>
+                    <!-- Step 3 -->
+                    <button name="action_exchange_code"
+                            string="Connect"
+                            type="object"
+                            class="btn-primary"
+                            invisible="step != 'exchange'"/>
+                    <!-- Done -->
+                    <button name="action_close"
+                            string="Close"
+                            type="object"
+                            class="btn-primary"
+                            invisible="step != 'done'"/>
+                    <button string="Cancel"
+                            class="btn-secondary"
+                            special="cancel"
+                            invisible="step == 'done'"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

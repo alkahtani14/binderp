@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================
+         Location Profile Report — QWeb template
+         ================================================================ -->
+    <template id="report_google_business_location_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+
+                    <!-- RTL support for Arabic -->
+                    <t t-set="is_rtl" t-value="doc.env.lang == 'ar_SA'"/>
+
+                    <div class="page" t-att-dir="'rtl' if is_rtl else 'ltr'">
+
+                        <!-- ── Header ───────────────────────────── -->
+                        <div class="row mb-4">
+                            <div class="col-8">
+                                <h2 class="o_bold" t-esc="doc.name"/>
+                                <div class="text-muted" t-if="doc.primary_category">
+                                    <t t-esc="doc.primary_category"/>
+                                </div>
+                            </div>
+                            <div class="col-4 text-end">
+                                <span t-att-class="'badge rounded-pill ' + ('bg-success' if doc.state == 'connected' else 'bg-secondary')">
+                                    <t t-esc="dict(doc.fields_get(['state'])['state']['selection']).get(doc.state, doc.state)"/>
+                                </span>
+                                <div class="text-muted small mt-1">
+                                    Last sync: <t t-esc="doc.last_sync_date and doc.last_sync_date.strftime('%d %b %Y %H:%M') or 'Never'"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ── Contact Details ──────────────────── -->
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <h4>Contact Information</h4>
+                                <table class="table table-borderless table-sm">
+                                    <tr t-if="doc.street">
+                                        <td class="text-muted" style="width:120px;">Address</td>
+                                        <td>
+                                            <t t-esc="doc.street"/>
+                                            <t t-if="doc.street2">, <t t-esc="doc.street2"/></t><br/>
+                                            <t t-if="doc.city"><t t-esc="doc.city"/></t>
+                                            <t t-if="doc.zip_code"> <t t-esc="doc.zip_code"/></t><br/>
+                                            <t t-if="doc.country_id"><t t-esc="doc.country_id.name"/></t>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="doc.phone">
+                                        <td class="text-muted">Phone</td>
+                                        <td><t t-esc="doc.phone"/></td>
+                                    </tr>
+                                    <tr t-if="doc.website">
+                                        <td class="text-muted">Website</td>
+                                        <td><t t-esc="doc.website"/></td>
+                                    </tr>
+                                    <tr t-if="doc.google_location_id">
+                                        <td class="text-muted">Location ID</td>
+                                        <td class="small text-muted"><t t-esc="doc.google_location_id"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <h4>Performance Summary</h4>
+                                <table class="table table-borderless table-sm">
+                                    <tr>
+                                        <td class="text-muted" style="width:140px;">Total Reviews</td>
+                                        <td><strong><t t-esc="doc.review_count"/></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Average Rating</td>
+                                        <td>
+                                            <strong><t t-esc="'%.1f' % doc.average_rating"/> / 5.0</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Unanswered</td>
+                                        <td>
+                                            <t t-esc="doc.unanswered_review_count"/>
+                                            <span t-if="doc.unanswered_review_count > 0" class="text-danger"> ⚠</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Media Items</td>
+                                        <td><t t-esc="doc.media_count"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Active Posts</td>
+                                        <td><t t-esc="len(doc.post_ids.filtered(lambda p: p.state == 'published'))"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- ── Business Hours ───────────────────── -->
+                        <div class="row mb-4" t-if="doc.hours_ids">
+                            <div class="col-12">
+                                <h4>Opening Hours</h4>
+                                <table class="table table-sm table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Day</th>
+                                            <th>Opens</th>
+                                            <th>Closes</th>
+                                            <th>Note</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="doc.hours_ids.sorted('day_sequence')" t-as="h">
+                                            <tr>
+                                                <td><t t-esc="dict(h.fields_get(['day_of_week'])['day_of_week']['selection']).get(h.day_of_week, h.day_of_week)"/></td>
+                                                <td t-att-class="'text-muted' if h.is_closed else ''">
+                                                    <t t-if="h.is_closed">Closed</t>
+                                                    <t t-else=""><t t-esc="h.open_time_display"/></t>
+                                                </td>
+                                                <td>
+                                                    <t t-if="not h.is_closed"><t t-esc="h.close_time_display"/></t>
+                                                    <t t-else="">—</t>
+                                                </td>
+                                                <td class="text-muted small"><t t-esc="h.note or ''"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- ── Recent Reviews ───────────────────── -->
+                        <div class="row" t-if="doc.review_ids">
+                            <div class="col-12">
+                                <h4>Recent Reviews</h4>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:100px;">Date</th>
+                                            <th style="width:150px;">Reviewer</th>
+                                            <th style="width:60px;">Rating</th>
+                                            <th>Review</th>
+                                            <th style="width:80px;">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="doc.review_ids.sorted('review_date', reverse=True)[:20]" t-as="rev">
+                                            <tr>
+                                                <td class="text-muted small">
+                                                    <t t-esc="rev.review_date and rev.review_date.strftime('%d %b %Y') or ''"/>
+                                                </td>
+                                                <td><t t-esc="rev.reviewer_name or 'Anonymous'"/></td>
+                                                <td>
+                                                    <t t-esc="rev.rating"/> ★
+                                                </td>
+                                                <td class="small">
+                                                    <t t-esc="(rev.review_text or '')[:200]"/>
+                                                    <t t-if="rev.review_text and len(rev.review_text) > 200">…</t>
+                                                </td>
+                                                <td>
+                                                    <span t-att-class="'badge ' + ('bg-success' if rev.is_replied else 'bg-secondary')">
+                                                        <t t-if="rev.is_replied">Replied</t>
+                                                        <t t-else="">Pending</t>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <p t-if="doc.review_count > 20" class="text-muted small text-end">
+                                    Showing 20 of <t t-esc="doc.review_count"/> reviews.
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="google_business_media_action" model="ir.actions.act_window">
+        <field name="name">Media Library</field>
+        <field name="res_model">google.business.media</field>
+        <field name="view_mode">kanban,list,pivot,graph,form</field>
+        <field name="search_view_id" ref="google_business_media_view_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Upload your first photo or video
+            </p>
+            <p>
+                Publish photos and videos directly to your Google Business Profile.
+                Categorise by interior, exterior, product, menu, and more.
+            </p>
+        </field>
+    </record>
+</odoo>

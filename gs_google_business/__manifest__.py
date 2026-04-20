@@ -53,7 +53,7 @@ Benefits
     """,
     'author': 'Garage Systems',
     'website': 'https://www.garagesystems.io',
-    'license': 'LGPL-3',
+    'license': 'OPL-1',
     'application': False,
     'installable': True,
     'depends': [
